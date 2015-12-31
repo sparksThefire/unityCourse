@@ -14,4 +14,10 @@ public class MusicPlayer : MonoBehaviour {
 			GameObject.DontDestroyOnLoad(gameObject);
 		}
 	}
+
+	public void PlayBoing() {
+	}
+
+	public void PlayCrack() {
+	}
 }

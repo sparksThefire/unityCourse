@@ -4,9 +4,7 @@ using System.Collections;
 public class Ball : MonoBehaviour {
 
 	private Paddle paddle;
-
 	private bool hasStarted = false;
-
 	private Vector3 paddleToBallVector;
 
 	// Use this for initialization
@@ -16,7 +14,7 @@ public class Ball : MonoBehaviour {
 		paddleToBallVector = this.transform.position - paddle.transform.position;
 	
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
@@ -35,4 +33,13 @@ public class Ball : MonoBehaviour {
 		}
 
 	}
+
+	void OnCollisionEnter2D() {
+		Vector2 tweak = new Vector2(Random.Range(0f, 0.4f)-0.2f, Random.Range(0f, 0.2f)-0.2f);
+		GameObject.FindObjectOfType<Rigidbody2D>().velocity += tweak;
+		if (hasStarted) {
+			GameObject.FindObjectOfType<AudioSource>().Play();
+		}
+	}
+
 }

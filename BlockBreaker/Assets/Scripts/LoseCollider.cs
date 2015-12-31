@@ -10,10 +10,14 @@ public class LoseCollider : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
-		levelManager.LoadLevel("Lose Screen");
+		Lost ();
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {
+		Lost ();
+	}
+
+	private void Lost() {
 		levelManager.LoadLevel("Lose Screen");
 	}
 }
