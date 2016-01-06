@@ -4,6 +4,7 @@ using System.Collections;
 public class EnemyFormationController : MonoBehaviour {
 
     public float enemySpeed = 2f;
+    public float spawnDelay = 0.5f;
     public GameObject enemyPrefab;
     public SceneBoundary sceneBoundary;
 
@@ -21,15 +22,18 @@ public class EnemyFormationController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        foreach (Transform child in transform)
-        {
-            CreateEnemy(child);
-        }
-	}
+        SpawnEnemies();
+    }
 	
 	// Update is called once per frame
 	void Update () {
         Movement();
+
+        if (AllMembersDead())
+        {
+            SpawnUntilFull();
+            Debug.Log("Empty Formation.");
+        }
     }
 
     private void Movement()
@@ -62,11 +66,56 @@ public class EnemyFormationController : MonoBehaviour {
         gameObject.transform.position = newPosition;
     }
     
+    private bool AllMembersDead()
+    {
+
+        foreach(Transform childPositionGameObject in transform)
+        {
+            if (childPositionGameObject.childCount > 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Transform NextFreePosition()
+    {
+        foreach (Transform childPositionGameObject in transform)
+        {
+            if (childPositionGameObject.childCount <= 0)
+            {
+                return childPositionGameObject;
+            }
+        }
+
+        return null;
+    }
+
+    private void SpawnUntilFull()
+    {
+        Transform freePosition = NextFreePosition();
+        if (freePosition)
+        {
+            CreateEnemy(freePosition);
+        }
+        if (NextFreePosition()) {
+            Invoke("SpawnUntilFull", spawnDelay);
+        }
+    }
+
+    private void SpawnEnemies()
+    {
+        foreach (Transform child in transform)
+        {
+            CreateEnemy(child);
+        }
+    }
+
     private void CreateEnemy(Transform parent)
     {
-        GameObject enemy = Instantiate(enemyPrefab, parent.transform.position, Quaternion.identity) as GameObject;
-        enemy.transform.parent = parent;
-        enemy.GetComponent<EnemyController>().SetHealth(parent.GetComponent<Position>().health);
+        parent.GetComponent<Position>().SpawnUnit();
     }
 
     private float GetRightEdge()

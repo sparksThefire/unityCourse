@@ -2,12 +2,20 @@
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
-
     public float shotsPerSecond = 0.5f;
-    public float projectileSpeed = 2f;
     public GameObject projectile;
+    public AudioClip lazerSound;
+    public AudioClip deathSound;
 
+    private ScoreKeeper scoreKeeper;
     private float health = 100f;
+
+    private int scoreValue = 1;
+
+    public void Start()
+    {
+        scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();
+    }
 
     public void Update()
     {
@@ -27,6 +35,8 @@ public class EnemyController : MonoBehaviour {
             missle.Hit();
             if (health <= 0)
             {
+                scoreKeeper.Score(scoreValue);
+                AudioSource.PlayClipAtPoint(deathSound, transform.position);
                 Destroy(gameObject);
             }
         }
@@ -34,10 +44,12 @@ public class EnemyController : MonoBehaviour {
 
     private void Fire()
     {
-        Vector3 offset = new Vector3(0, -1, 0);
-        GameObject lazer = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
-        lazer.transform.position += offset;
-        lazer.GetComponent<Rigidbody2D>().velocity = new Vector3(0, -1f * projectileSpeed);
+        Debug.Log(string.Format("{0} is trying to fire", gameObject.name));
+        foreach (Transform weaponMount in transform)
+        {
+            GameObject firedProjectile = Instantiate(projectile, weaponMount.transform.position, Quaternion.identity) as GameObject;
+        }
+        AudioSource.PlayClipAtPoint(lazerSound, transform.position);
     }
 
     public void SetHealth(int newHealth)
