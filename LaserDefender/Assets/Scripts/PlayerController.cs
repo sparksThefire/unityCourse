@@ -12,13 +12,23 @@ public class PlayerController : MonoBehaviour {
     public SceneBoundary sceneBoundary;
     public AudioClip lazerSound;
 
+    public float firingCooldown = 0f;
+
     private float padding = 0.1f;
     private Text playerHpText;
+    //private Time lastFired = new Time();
 
     public void Start()
     {
         playerHpText = GameObject.Find("PlayerHp").GetComponent<Text>();
         UpdateHpUI();
+
+        int sum = 0;
+        for (int i = 1; i < 366; i++)
+        {
+            sum += i;
+        }
+        Debug.Log(string.Format("Sum of 365: {0}", sum / 100.0f));
     }
 
     public void OnTriggerEnter2D(Collider2D collider)
@@ -72,11 +82,11 @@ public class PlayerController : MonoBehaviour {
         gameObject.transform.position = newPosition;
 
         // Fire
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             InvokeRepeating("Fire", 0.000001f, fireRate);
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space) && Input.GetKeyUp(KeyCode.UpArrow))
         {
             CancelInvoke("Fire");
         }

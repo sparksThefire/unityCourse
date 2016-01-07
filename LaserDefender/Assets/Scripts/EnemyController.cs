@@ -47,7 +47,7 @@ public class EnemyController : MonoBehaviour {
         Debug.Log(string.Format("{0} is trying to fire", gameObject.name));
         foreach (Transform weaponMount in transform)
         {
-            GameObject firedProjectile = Instantiate(projectile, weaponMount.transform.position, Quaternion.identity) as GameObject;
+            Instantiate(projectile, weaponMount.transform.position, Quaternion.identity);
         }
         AudioSource.PlayClipAtPoint(lazerSound, transform.position);
     }

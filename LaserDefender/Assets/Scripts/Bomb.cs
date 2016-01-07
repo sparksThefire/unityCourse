@@ -36,7 +36,8 @@ public class Bomb : MonoBehaviour
             
             GameObject bullet = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
             bullet.transform.position = transform.position + projectilePosition;
-            bullet.GetComponent<Rigidbody2D>().velocity = unitCircle + transform.GetComponent<Rigidbody2D>().velocity;
+            bullet.GetComponent<Rigidbody2D>().velocity = transform.GetComponent<Rigidbody2D>().velocity;
+            bullet.GetComponent<Projectile>().SetAcceleration(unitCircle);
         }
     }
 
