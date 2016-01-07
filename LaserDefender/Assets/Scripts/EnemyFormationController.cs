@@ -115,7 +115,16 @@ public class EnemyFormationController : MonoBehaviour {
 
     private void CreateEnemy(Transform parent)
     {
-        parent.GetComponent<Position>().SpawnUnit();
+        PositionRandom rndPosition = parent.GetComponent<PositionRandom>();
+        Position position = parent.GetComponent<Position>();
+        if (rndPosition)
+        {
+            rndPosition.SpawnUnit();
+        }
+        else if (position)
+        {
+            position.SpawnUnit();
+        }
     }
 
     private float GetRightEdge()

@@ -12,7 +12,6 @@ public class Bomb : MonoBehaviour
     // Use this for initialization
     public void Start()
     {
-        Debug.Log("Bomb Instantiated");
         Invoke("Explode", bombDelay + Random.Range(0f, 1f));
     }
 
@@ -23,7 +22,6 @@ public class Bomb : MonoBehaviour
 
     public void Explode()
     {
-        Debug.Log("Bomb Explode");
         float degreeDifference = (2f * Mathf.PI) / numberOfProjectiles;
         
         for (int i = 0; i <= numberOfProjectiles; i++)

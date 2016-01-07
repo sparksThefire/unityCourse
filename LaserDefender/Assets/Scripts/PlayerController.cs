@@ -4,31 +4,30 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-    public float playerHp = 500f;
+    public float maxPlayerHp = 500f;
     public float fireRate = 0.3f;
+    public float shieldRate = 2f;
     public float speed = 7f;
     public float projectileSpeed = 2f;
     public GameObject projectile;
+    public GameObject shield;
     public SceneBoundary sceneBoundary;
     public AudioClip lazerSound;
 
-    public float firingCooldown = 0f;
-
+    private float currentPlayerHp;
+    private float shieldCooldown = 0f;
+    private float fireCooldown = 0f;
     private float padding = 0.1f;
     private Text playerHpText;
-    //private Time lastFired = new Time();
+    private Slider playerHpBar;
 
     public void Start()
     {
         playerHpText = GameObject.Find("PlayerHp").GetComponent<Text>();
+        playerHpBar = GameObject.Find("PlayerHealthBar").GetComponent<Slider>();
+        currentPlayerHp = maxPlayerHp;
+        playerHpBar.maxValue = maxPlayerHp;
         UpdateHpUI();
-
-        int sum = 0;
-        for (int i = 1; i < 366; i++)
-        {
-            sum += i;
-        }
-        Debug.Log(string.Format("Sum of 365: {0}", sum / 100.0f));
     }
 
     public void OnTriggerEnter2D(Collider2D collider)
@@ -48,8 +47,8 @@ public class PlayerController : MonoBehaviour {
 
     public void Hit(float damage)
     {
-        playerHp -= damage;
-        if (playerHp <= 0f)
+        currentPlayerHp -= damage;
+        if (currentPlayerHp <= 0f)
         {
             Die();
         }
@@ -81,15 +80,45 @@ public class PlayerController : MonoBehaviour {
         newPosition.x = Mathf.Clamp(newPosition.x, sceneBoundary.GetMinX(padding), sceneBoundary.GetMaxX(padding));
         gameObject.transform.position = newPosition;
 
-        // Fire
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
+        float currentTime = Time.time;
+        bool hasShield = false;
+
+        // Shield
+        foreach (Transform child in transform)
         {
-            InvokeRepeating("Fire", 0.000001f, fireRate);
+            if (child.GetComponent<Shield>())
+            {
+                hasShield = true;
+            }
         }
-        if (Input.GetKeyUp(KeyCode.Space) && Input.GetKeyUp(KeyCode.UpArrow))
+
+        if (currentTime >= shieldCooldown && !hasShield)
+        {
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                GameObject summonedShield = Instantiate(shield, transform.position, Quaternion.identity) as GameObject;
+                summonedShield.transform.parent = gameObject.transform;
+            }
+        }
+
+        // Fire
+        if (currentTime >= fireCooldown)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                InvokeRepeating("Fire", 0.000001f, fireRate);
+                fireCooldown = currentTime + fireRate;
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow))
         {
             CancelInvoke("Fire");
         }
+    }
+
+    public void ShieldDestroyed()
+    {
+        shieldCooldown = Time.time + shieldRate;
     }
 
     public void Fire()
@@ -103,6 +132,6 @@ public class PlayerController : MonoBehaviour {
 
     public void UpdateHpUI()
     {
-        playerHpText.text = string.Format("Health: {0}", playerHp);
+        playerHpBar.value = currentPlayerHp;
     }
 }

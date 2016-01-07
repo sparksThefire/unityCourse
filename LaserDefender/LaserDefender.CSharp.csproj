@@ -67,8 +67,10 @@
     <Compile Include="Assets\Scripts\EnemyFormationController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Position.cs" />
+    <Compile Include="Assets\Scripts\PositionRandom.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
     <Compile Include="Assets\Scripts\ScoreDisplay.cs" />
+    <Compile Include="Assets\Scripts\Shield.cs" />
     <Compile Include="Assets\Scripts\Shredder.cs" />
     <Compile Include="Assets\Scripts\Util\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Util\MusicPlayer.cs" />

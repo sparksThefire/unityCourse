@@ -8,9 +8,9 @@ public class EnemyController : MonoBehaviour {
     public AudioClip deathSound;
 
     private ScoreKeeper scoreKeeper;
-    private float health = 100f;
+    public float health = 100f;
 
-    private int scoreValue = 1;
+    public int scoreValue = 1;
 
     public void Start()
     {
@@ -44,7 +44,6 @@ public class EnemyController : MonoBehaviour {
 
     private void Fire()
     {
-        Debug.Log(string.Format("{0} is trying to fire", gameObject.name));
         foreach (Transform weaponMount in transform)
         {
             Instantiate(projectile, weaponMount.transform.position, Quaternion.identity);
