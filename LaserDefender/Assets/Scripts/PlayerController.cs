@@ -104,13 +104,13 @@ public class PlayerController : MonoBehaviour {
         // Fire
         if (currentTime >= fireCooldown)
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
                 InvokeRepeating("Fire", 0.000001f, fireRate);
                 fireCooldown = currentTime + fireRate;
             }
         }
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow))
+        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.W))
         {
             CancelInvoke("Fire");
         }
